@@ -1,0 +1,35 @@
+name: Extended empirical checks
+
+on:
+  push:
+    paths:
+      - ".github/workflows/extended_empirical_checks.yml"
+      - "scripts/extended_empirical_checks.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --disable-pip-version-check pandas numpy statsmodels linearmodels
+      - name: Run descriptive statistics correlation and random effects
+        run: python scripts/extended_empirical_checks.py
+      - name: Commit empirical outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f output/tables/descriptive_statistics.csv
+          git add -f output/tables/correlation_matrix.csv
+          git add -f output/tables/random_effects_robustness.csv
+          git add -f output/logs/extended_empirical_checks.txt
+          git diff --cached --quiet || git commit -m "Add descriptive statistics and RE robustness"
+          git pull --rebase
+          git push
