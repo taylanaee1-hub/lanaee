@@ -1,0 +1,46 @@
+﻿partner_code,partner_iso,country,is_group,cumulative_export,years_observed,zero_years,first_year,last_year,excluded_special,gdp_years,gdp_missing,distance,distance_missing,eligible,final_sample
+504,MAR,Morocco,False,3784472481.0,20,0,2005,2024,False,20,0,9951.105,False,True,True
+344,HKG,"China, Hong Kong SAR",False,3712118327.0,20,0,2005,2024,True,0,20,,True,False,False
+458,MYS,Malaysia,False,1483112108.0,20,0,2005,2024,False,20,0,4355.047,False,True,True
+842,USA,USA,False,1301013350.0,20,0,2005,2024,False,20,0,10993.68,False,True,True
+392,JPN,Japan,False,1141494247.0,20,0,2005,2024,False,20,0,2098.111,False,True,True
+288,GHA,Ghana,False,1108020133.0,20,0,2005,2024,False,20,0,11831.63,False,True,True
+704,VNM,Viet Nam,False,1045598140.0,19,0,2005,2024,False,20,0,2330.799,False,True,True
+478,MRT,Mauritania,False,1030075312.0,20,0,2005,2024,False,20,0,11903.59,False,True,True
+686,SEN,Senegal,False,968022318.0,20,0,2005,2024,False,20,0,12312.88,False,True,True
+12,DZA,Algeria,False,873375509.0,20,0,2005,2024,False,20,0,9117.676,False,True,True
+643,RUS,Russian Federation,False,862137225.0,20,0,2005,2024,False,20,0,5795.045,False,True,True
+768,TGO,Togo,False,761607086.0,20,0,2005,2024,False,20,0,11656.86,False,True,True
+860,UZB,Uzbekistan,False,752505407.0,20,0,2005,2024,False,20,0,3943.621,False,True,True
+276,DEU,Germany,False,695311498.0,20,0,2005,2024,False,20,0,7785.342,False,True,True
+466,MLI,Mali,False,470886638.0,20,0,2005,2024,False,20,0,11841.6,False,True,True
+764,THA,Thailand,False,398408216.0,20,0,2005,2024,False,20,0,3303.891,False,True,True
+251,FRA,France,False,352821281.0,20,0,2005,2024,False,20,0,8225.232,False,True,True
+104,MMR,Myanmar,False,340657376.0,20,0,2005,2024,False,20,0,3234.079,False,True,True
+270,GMB,Gambia,False,333133431.0,20,0,2005,2024,False,20,0,12365.75,False,True,True
+204,BEN,Benin,False,278948296.0,20,0,2005,2024,False,20,0,11545.88,False,True,True
+434,LBY,Libya,False,264408756.0,20,0,2005,2024,False,20,0,8743.509,False,True,True
+562,NER,Niger,False,226644257.0,20,0,2005,2024,False,20,0,11024.17,False,True,True
+586,PAK,Pakistan,False,218653688.0,20,0,2005,2024,False,20,0,3882.877,False,True,True
+826,GBR,United Kingdom,False,203421952.0,20,0,2005,2024,False,20,0,8151.353,False,True,True
+324,GIN,Guinea,False,189927108.0,20,0,2005,2024,False,20,0,12651.77,False,True,True
+36,AUS,Australia,False,184646000.0,20,0,2005,2024,False,20,0,8956.436,False,True,True
+124,CAN,Canada,False,171803244.0,20,0,2005,2024,False,20,0,10598.32,False,True,True
+120,CMR,Cameroon,False,170309997.0,20,0,2005,2024,False,20,0,11002.26,False,True,True
+724,ESP,Spain,False,169003281.0,20,0,2005,2024,False,20,0,9232.299,False,True,True
+702,SGP,Singapore,False,159887767.0,20,0,2005,2024,False,20,0,4484.657,False,True,True
+616,POL,Poland,False,158719422.0,20,0,2005,2024,False,20,0,6947.899,False,True,True
+410,KOR,Rep. of Korea,False,136073425.0,20,0,2005,2024,False,20,0,955.6511,False,True,True
+528,NLD,Netherlands,False,134133706.0,20,0,2005,2024,False,20,0,7831.141,False,True,True
+4,AFG,Afghanistan,False,133712679.0,20,0,2005,2024,False,20,0,4180.438,False,True,True
+364,IRN,Iran,False,131543052.0,20,0,2005,2024,False,20,0,5609.038,False,True,True
+56,BEL,Belgium,False,127631571.0,20,0,2005,2024,False,20,0,7970.82,False,True,True
+384,CIV,Côte d'Ivoire,False,126546715.0,20,0,2005,2024,False,20,0,12145.08,False,True,False
+144,LKA,Sri Lanka,False,122017986.0,20,0,2005,2024,False,20,0,5171.491,False,True,False
+804,UKR,Ukraine,False,119163692.0,20,0,2005,2024,False,20,0,6460.799,False,True,False
+784,ARE,United Arab Emirates,False,102561000.0,20,0,2005,2024,False,20,0,5966.427,False,True,False
+762,TJK,Tajikistan,False,100405711.0,20,0,2005,2024,False,20,0,4052.918,False,True,False
+490,S19,"Other Asia, nes",False,83598552.0,20,0,2005,2024,False,0,20,,True,False,False
+682,SAU,Saudi Arabia,False,83085670.0,20,0,2005,2024,False,20,0,6605.185,False,True,False
+788,TUN,Tunisia,False,77953049.0,20,0,2005,2024,False,20,0,8646.589,False,True,False
+795,TKM,Turkmenistan,False,74788073.0,20,0,2005,2024,False,20,0,4939.987,False,True,False
