@@ -1,0 +1,36 @@
+name: Build final tea gravity panel
+
+on:
+  push:
+    paths:
+      - ".github/workflows/build_final_panel.yml"
+      - "scripts/build_final_panel.py"
+      - "data/manual/fta_effective_years.csv"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --disable-pip-version-check pandas numpy pyreadstat
+      - name: Build final merged panel
+        run: python scripts/build_final_panel.py
+      - name: Commit final panel and quality report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f data/clean/tea_gravity_panel_2005_2024.csv
+          git add -f data/clean/tea_gravity_panel_2005_2024.dta
+          git add -f output/tables/final_sample_35.csv
+          git add -f output/logs/final_panel_quality.md
+          git diff --cached --quiet || git commit -m "Build final tea gravity model panel"
+          git pull --rebase
+          git push
