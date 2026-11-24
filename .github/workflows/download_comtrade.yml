@@ -1,0 +1,40 @@
+name: Download UN Comtrade tea exports
+
+on:
+  push:
+    paths:
+      - ".github/workflows/download_comtrade.yml"
+      - "scripts/download_comtrade.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --disable-pip-version-check pandas requests
+
+      - name: Download and validate UN Comtrade data
+        run: python scripts/download_comtrade.py
+
+      - name: Commit generated data and report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f data/raw/comtrade_china_hs0902_2005_2024_raw.csv
+          git add -f data/clean/tea_exports_2005_2024.csv
+          git add -f output/tables/partner_export_ranking.csv
+          git add -f output/logs/comtrade_data_quality.md
+          git diff --cached --quiet || git commit -m "Download and validate UN Comtrade tea export data"
+          git push
