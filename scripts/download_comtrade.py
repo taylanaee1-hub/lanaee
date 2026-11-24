@@ -30,10 +30,14 @@ OUT_REPORT = Path("output/logs/comtrade_data_quality.md")
 for p in [OUT_RAW.parent, OUT_CLEAN.parent, OUT_RANK.parent, OUT_REPORT.parent]:
     p.mkdir(parents=True, exist_ok=True)
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
+session = requests.Session()
+session.headers.update({"User-Agent": "tea-fta-gravity-paper/1.0"})
 
+all_rows = []
+annual_counts = {}
+annual_errors = []
 
-def fetch_year(year: int):
+for year in YEARS:
     params = {
         "reporterCode": REPORTER,
         "period": year,
@@ -41,18 +45,20 @@ def fetch_year(year: int):
         "flowCode": FLOW,
     }
     last_exc = None
-    for attempt in range(3):
+    for attempt in range(6):
         try:
-            r = requests.get(
-                BASE,
-                params=params,
-                headers={"User-Agent": "tea-fta-gravity-paper/1.0"},
-                timeout=35,
-            )
+            r = session.get(BASE, params=params, timeout=60)
+            if r.status_code == 429:
+                retry_after = r.headers.get("Retry-After")
+                pause = int(retry_after) if retry_after and retry_after.isdigit() else min(5 * (attempt + 1), 30)
+                print(f"{year}: rate limited (429), retrying after {pause}s", flush=True)
+                time.sleep(pause)
+                continue
             r.raise_for_status()
             payload = r.json()
             rows = payload.get("data", [])
             count = int(payload.get("count", len(rows)))
+            annual_counts[year] = count
             if count >= 500:
                 raise RuntimeError(
                     f"{year}: API returned {count} rows, reaching preview cap; "
@@ -62,32 +68,19 @@ def fetch_year(year: int):
                 raise RuntimeError(f"{year}: API returned zero rows.")
             for row in rows:
                 row["_query_year"] = year
-            return year, count, rows
+            all_rows.extend(rows)
+            print(f"{year}: {count} rows", flush=True)
+            last_exc = None
+            time.sleep(1.5)
+            break
         except Exception as exc:
             last_exc = exc
-            if attempt < 2:
-                time.sleep(2 ** attempt)
-    raise RuntimeError(f"{year}: {last_exc}")
-
-
-all_rows = []
-annual_counts = {}
-errors = []
-
-with ThreadPoolExecutor(max_workers=4) as pool:
-    futures = {pool.submit(fetch_year, year): year for year in YEARS}
-    for future in as_completed(futures):
-        year = futures[future]
-        try:
-            y, count, rows = future.result()
-            annual_counts[y] = count
-            all_rows.extend(rows)
-            print(f"{y}: {count} rows", flush=True)
-        except Exception as exc:
-            errors.append(str(exc))
-
-if errors:
-    raise SystemExit("\n".join(sorted(errors)))
+            if attempt == 5:
+                annual_errors.append(f"{year}: {exc}")
+            else:
+                time.sleep(min(2 ** attempt, 20))
+    if last_exc is not None:
+        raise SystemExit("\n".join(annual_errors))
 
 raw = pd.DataFrame(all_rows)
 raw.to_csv(OUT_RAW, index=False, encoding="utf-8-sig")
