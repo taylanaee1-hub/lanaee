@@ -1,0 +1,50 @@
+DESCRIPTIVE STATISTICS
+      variable  count         mean          std          min          max
+        export  699.0 2.970260e+07 4.090322e+07 2.450000e+03 2.847117e+08
+     gdp_china  700.0 1.070115e+13 5.342537e+12 2.317551e+12 1.872967e+13
+   gdp_partner  700.0 1.305083e+12 3.351475e+12 1.027701e+09 2.929801e+13
+      distance  700.0 7.908984e+03 3.459894e+03 9.556511e+02 1.265177e+04
+           fta  700.0 2.014286e-01 4.013542e-01 0.000000e+00 1.000000e+00
+     ln_export  699.0 1.649332e+01 1.306634e+00 7.803843e+00 1.946699e+01
+  ln_gdp_china  700.0 2.983466e+01 6.305074e-01 2.847153e+01 3.056113e+01
+ln_gdp_partner  700.0 2.590674e+01 2.301182e+00 2.075059e+01 3.100854e+01
+   ln_distance  700.0 8.833055e+00 6.055573e-01 6.862393e+00 9.445552e+00
+
+CORRELATION MATRIX
+                ln_export  ln_gdp_china  ln_gdp_partner   ln_distance       fta
+ln_export        1.000000  3.896087e-01        0.029601  1.681977e-01 -0.123885
+ln_gdp_china     0.389609  1.000000e+00        0.107375  6.801511e-15  0.083337
+ln_gdp_partner   0.029601  1.073754e-01        1.000000 -3.429460e-01  0.114215
+ln_distance      0.168198  6.801511e-15       -0.342946  1.000000e+00 -0.586358
+fta             -0.123885  8.333698e-02        0.114215 -5.863581e-01  1.000000
+
+RANDOM EFFECTS ROBUSTNESS
+                        RandomEffects Estimation Summary                        
+================================================================================
+Dep. Variable:              ln_export   R-squared:                        0.3210
+Estimator:              RandomEffects   R-squared (Between):             -0.1747
+No. Observations:                 699   R-squared (Within):               0.3365
+Date:                Tue, Nov 24 2026   R-squared (Overall):              0.0720
+Time:                        17:05:06   Log-likelihood                   -799.11
+Cov. Estimator:             Clustered                                           
+                                        F-statistic:                      82.053
+Entities:                          35   P-value                           0.0000
+Avg Obs:                       19.971   Distribution:                   F(4,694)
+Min Obs:                       19.000                                           
+Max Obs:                       20.000   F-statistic (robust):             14.562
+                                        P-value                           0.0000
+Time periods:                      20   Distribution:                   F(4,694)
+Avg Obs:                       34.950                                           
+Min Obs:                       34.000                                           
+Max Obs:                       35.000                                           
+                                                                                
+                               Parameter Estimates                                
+==================================================================================
+                Parameter  Std. Err.     T-stat    P-value    Lower CI    Upper CI
+----------------------------------------------------------------------------------
+const             -16.263     6.3228    -2.5722     0.0103     -28.677     -3.8492
+ln_gdp_china       0.7328     0.1072     6.8363     0.0000      0.5223      0.9433
+ln_gdp_partner     0.2315     0.1444     1.6031     0.1094     -0.0520      0.5149
+ln_distance        0.5606     0.3396     1.6509     0.0992     -0.1061      1.2272
+fta               -0.2768     0.2316    -1.1952     0.2324     -0.7315      0.1779
+==================================================================================
