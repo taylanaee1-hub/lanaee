@@ -1,0 +1,30 @@
+name: Test UN Comtrade API
+
+on:
+  push:
+    paths:
+      - ".github/workflows/test_comtrade.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Query 2024 China HS0902 exports
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://comtradeapi.un.org/public/v1/preview/C/A/HS?reporterCode=156&period=2024&cmdCode=0902&flowCode=X'
+          curl --connect-timeout 10 --max-time 30 --retry 1 -sS "$URL" -o response.json
+          python - <<'PY'
+          import json
+          p=json.load(open('response.json'))
+          print('count=', p.get('count'))
+          print('elapsedTime=', p.get('elapsedTime'))
+          data=p.get('data', [])
+          print('data_len=', len(data))
+          if data:
+              print('first_row_keys=', sorted(data[0].keys()))
+              print('first_partner=', data[0].get('partnerCode'), data[0].get('partnerDesc'))
+          PY
