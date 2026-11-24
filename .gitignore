@@ -1,0 +1,8 @@
+*.dta
+*.csv
+*.xlsx
+*.xls
+*.log
+~$*
+.DS_Store
+Thumbs.db
