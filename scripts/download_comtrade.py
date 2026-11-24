@@ -30,14 +30,10 @@ OUT_REPORT = Path("output/logs/comtrade_data_quality.md")
 for p in [OUT_RAW.parent, OUT_CLEAN.parent, OUT_RANK.parent, OUT_REPORT.parent]:
     p.mkdir(parents=True, exist_ok=True)
 
-session = requests.Session()
-session.headers.update({"User-Agent": "tea-fta-gravity-paper/1.0"})
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-all_rows = []
-annual_counts = {}
-annual_errors = []
 
-for year in YEARS:
+def fetch_year(year: int):
     params = {
         "reporterCode": REPORTER,
         "period": year,
@@ -45,14 +41,18 @@ for year in YEARS:
         "flowCode": FLOW,
     }
     last_exc = None
-    for attempt in range(4):
+    for attempt in range(3):
         try:
-            r = session.get(BASE, params=params, timeout=60)
+            r = requests.get(
+                BASE,
+                params=params,
+                headers={"User-Agent": "tea-fta-gravity-paper/1.0"},
+                timeout=35,
+            )
             r.raise_for_status()
             payload = r.json()
             rows = payload.get("data", [])
             count = int(payload.get("count", len(rows)))
-            annual_counts[year] = count
             if count >= 500:
                 raise RuntimeError(
                     f"{year}: API returned {count} rows, reaching preview cap; "
@@ -62,18 +62,32 @@ for year in YEARS:
                 raise RuntimeError(f"{year}: API returned zero rows.")
             for row in rows:
                 row["_query_year"] = year
-            all_rows.extend(rows)
-            print(f"{year}: {count} rows")
-            last_exc = None
-            break
+            return year, count, rows
         except Exception as exc:
             last_exc = exc
-            if attempt == 3:
-                annual_errors.append(f"{year}: {exc}")
-            else:
+            if attempt < 2:
                 time.sleep(2 ** attempt)
-    if last_exc is not None:
-        raise SystemExit("\n".join(annual_errors))
+    raise RuntimeError(f"{year}: {last_exc}")
+
+
+all_rows = []
+annual_counts = {}
+errors = []
+
+with ThreadPoolExecutor(max_workers=4) as pool:
+    futures = {pool.submit(fetch_year, year): year for year in YEARS}
+    for future in as_completed(futures):
+        year = futures[future]
+        try:
+            y, count, rows = future.result()
+            annual_counts[y] = count
+            all_rows.extend(rows)
+            print(f"{y}: {count} rows", flush=True)
+        except Exception as exc:
+            errors.append(str(exc))
+
+if errors:
+    raise SystemExit("\n".join(sorted(errors)))
 
 raw = pd.DataFrame(all_rows)
 raw.to_csv(OUT_RAW, index=False, encoding="utf-8-sig")
