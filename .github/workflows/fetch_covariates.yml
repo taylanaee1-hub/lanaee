@@ -1,0 +1,35 @@
+name: Fetch GDP and CEPII distance
+
+on:
+  push:
+    paths:
+      - ".github/workflows/fetch_covariates.yml"
+      - "scripts/fetch_covariates.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --disable-pip-version-check pandas requests xlrd
+      - name: Fetch World Bank GDP and CEPII GeoDist
+        run: python scripts/fetch_covariates.py
+      - name: Commit covariates and availability report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f data/clean/worldbank_gdp_2005_2024.csv
+          git add -f data/clean/cepii_distance_china.csv
+          git add -f output/tables/sample_candidates_covariates.csv
+          git add -f output/logs/covariate_availability.md
+          git diff --cached --quiet || git commit -m "Fetch GDP and CEPII distance covariates"
+          git pull --rebase
+          git push
