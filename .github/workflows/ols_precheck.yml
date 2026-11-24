@@ -1,0 +1,33 @@
+name: OLS precheck
+
+on:
+  push:
+    paths:
+      - ".github/workflows/ols_precheck.yml"
+      - "scripts/precheck_ols.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  precheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --disable-pip-version-check pandas statsmodels
+      - name: Run OLS specifications
+        run: python scripts/precheck_ols.py
+      - name: Commit precheck results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f output/tables/python_ols_precheck.csv
+          git add -f output/logs/python_ols_precheck.txt
+          git diff --cached --quiet || git commit -m "Add OLS precheck results"
+          git pull --rebase
+          git push
