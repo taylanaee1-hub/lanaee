@@ -1,15 +1,18 @@
 clear all
 set more off
 
-* TODO: 设置项目根目录
-* cd ".../tea_fta_paper"
+* Run this file from the repository root folder.
+* Example:
+* cd "C:/.../lanaee"
 
 capture log close
-log using "output/logs/master.log", replace text
+log using "output/logs/stata_master.log", replace text
 
-do "do/01_clean_trade.do"
-do "do/02_merge_data.do"
+display "=== Descriptive statistics ==="
 do "do/03_descriptive.do"
+
+display "=== Gravity regressions ==="
 do "do/04_regression.do"
 
 log close
+display "Finished. See output/logs/stata_master.log"
