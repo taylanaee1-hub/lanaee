@@ -24,13 +24,13 @@ isos = cand.loc[~cand["excluded_special"], "partner_iso"].dropna().unique().toli
 
 # ---------- World Bank GDP ----------
 wb_codes = sorted(set(isos + ["CHN"]))
-url = "https://api.worldbank.org/v2/country/" + ";".join(wb_codes) + f"/indicator/{GDP_IND}"
+url = f"https://api.worldbank.org/v2/country/all/indicator/{GDP_IND}"
 params = {"format":"json", "date":"2005:2024", "per_page":20000}
 r = requests.get(url, params=params, timeout=90, headers={"User-Agent":"tea-fta-gravity-paper/1.0"})
 r.raise_for_status()
 payload = r.json()
-if not isinstance(payload, list) or len(payload) < 2:
-    raise RuntimeError("Unexpected World Bank API response")
+if not isinstance(payload, list) or len(payload) < 2 or payload[1] is None:
+    raise RuntimeError(f"Unexpected World Bank API response: {str(payload)[:500]}")
 
 rows = []
 for rec in payload[1]:
